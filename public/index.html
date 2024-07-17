@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="uz">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Yosh hisoblagich</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 500px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      input,
+      button {
+        display: block;
+        width: 100%;
+        margin: 10px 0;
+        padding: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Yoshni hisoblash</h1>
+    <input type="number" id="birthYear" placeholder="Tug'ilgan yilingizni kiriting" />
+    <button onclick="calculateAge()">Yoshni hisoblash</button>
+
+    <script>
+      const tg = window.Telegram.WebApp
+      tg.expand()
+
+      function calculateAge() {
+        const birthYear = document.getElementById('birthYear').value
+        const chatId = tg.initDataUnsafe.user.id
+
+        fetch('/calculate-age', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({chatId, birthYear}),
+        }).then((response) => {
+          if (response.ok) {
+            tg.showAlert('Yosh hisoblanib, Telegram botga yuborildi!')
+            tg.close()
+          } else {
+            tg.showAlert("Xatolik yuz berdi. Iltimos, qaytadan urinib ko'ring.")
+          }
+        })
+      }
+    </script>
+  </body>
+</html>
